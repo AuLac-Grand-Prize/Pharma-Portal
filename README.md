@@ -1,48 +1,48 @@
-# Pharma Portal — Web/Tablet cho 60.000+ nhà thuốc Việt Nam
+# Pharma Portal — Web/Tablet app for 60,000+ Vietnamese pharmacies
 
-> **Lớp Platform của PharmLink AI dành cho dược sĩ.**
-> POS thông minh + AI Clinical Assistant + Smart Inventory + Patient Care Dashboard + Compliance.
+> **The PharmLink AI platform layer for pharmacists.**
+> Smart POS + AI Clinical Assistant + Smart Inventory + Patient Care Dashboard + Compliance.
 
 ---
 
-## 1. Đối tượng người dùng
+## 1. Target users
 
-- **60.000+ nhà thuốc tư nhân** Việt Nam (ưu tiên thiết bị tablet/Android tablet giá rẻ).
-- Dược sĩ trưởng, dược sĩ phụ, thu ngân, kế toán nội bộ.
-- Người dùng vùng nông thôn, miền núi — UI tối ưu cho mạng 3G/4G chậm và thiết bị cấu hình thấp.
+- **60,000+ independent pharmacies** in Vietnam (optimized for low-cost Android tablets).
+- Head pharmacists, assistant pharmacists, cashiers, in-house accountants.
+- Rural and mountainous users — UI optimized for slow 3G/4G networks and low-spec devices.
 
-## 2. Tính năng chính
+## 2. Key features
 
 ### POS (Point of Sale)
-- Bán hàng nhanh với barcode scan, search thuốc bằng tên VN/biệt dược.
-- Thanh toán: tiền mặt, QR (VietQR), thẻ, ví điện tử (Momo, ZaloPay, VNPay).
-- In hóa đơn (máy in nhiệt) hoặc gửi e-receipt qua Zalo Mini App.
+- Fast checkout with barcode scanning, drug search by Vietnamese/brand name.
+- Payments: cash, QR (VietQR), card, e-wallets (Momo, ZaloPay, VNPay).
+- Print receipts (thermal printer) or send an e-receipt via the Zalo Mini App.
 
-### AI Clinical Assistant (tích hợp 4 engine AI)
-- **VietDrug AI** — cảnh báo tương tác thuốc realtime trong giỏ hàng.
-- **PrescriptionVision** — chụp ảnh đơn thuốc → auto-fill giỏ hàng.
-- **PharmaGPT-VN** — chatbox tra cứu thuốc bằng tiếng Việt tự nhiên.
-- **DemandForecast AI** — gợi ý đặt hàng tối ưu hàng tuần.
+### AI Clinical Assistant (4 AI engines integrated)
+- **VietDrug AI** — real-time drug-interaction alerts in the cart.
+- **PrescriptionVision** — photograph a prescription → auto-fill the cart.
+- **PharmaGPT-VN** — a chatbox for drug lookup in natural Vietnamese.
+- **DemandForecast AI** — weekly optimal reorder suggestions.
 
 ### Smart Inventory
-- Theo dõi tồn kho realtime, lô, hạn dùng (FEFO).
-- Cảnh báo thuốc sắp hết hạn, đề xuất khuyến mại để giảm tồn.
-- Đặt hàng B2B trực tiếp từ portal qua API Gateway.
+- Real-time stock tracking by batch and expiry (FEFO).
+- Near-expiry alerts and promotion suggestions to reduce stock.
+- Direct B2B ordering from the portal via the API Gateway.
 
 ### Patient Care Dashboard
-- Quản lý bệnh nhân mãn tính (tiểu đường, tăng huyết áp, tim mạch).
-- Nhắc nhở tái khám, tuân thủ điều trị qua Zalo OA.
-- Hồ sơ thuốc đã mua liên thông giữa các nhà thuốc trong mạng PharmLink.
+- Manage chronic patients (diabetes, hypertension, cardiovascular).
+- Follow-up reminders and treatment adherence via Zalo OA.
+- Purchase history shared across pharmacies in the PharmLink network.
 
 ### Compliance Automation
-- Báo cáo Bộ Y tế (thuốc kiểm soát đặc biệt, kháng sinh).
-- GPP audit log — checklist tự động.
-- Liên thông HL7 FHIR qua API Gateway.
+- Ministry of Health reporting (controlled substances, antibiotics).
+- GPP audit log — automated checklist.
+- HL7 FHIR interoperability via the API Gateway.
 
-## 3. Stack công nghệ
+## 3. Tech stack
 
-| Layer | Tech | Phiên bản |
-|-------|------|-----------|
+| Layer | Tech | Version |
+|-------|------|---------|
 | Framework | Next.js (App Router, RSC) | 14.2.18 |
 | UI runtime | React / React DOM | 18.3.1 |
 | Language | TypeScript (strict) | 5.6.3 |
@@ -52,12 +52,12 @@
 | HTTP | Axios | 1.7.7 |
 | Forms | React Hook Form + Zod | 7.53.2 / 3.23.8 |
 | Auth | NextAuth.js (credentials, JWT) | 4.24.10 |
-| i18n | next-intl (vi mặc định + en) | 3.25.0 |
+| i18n | next-intl (vi default + en) | 3.25.0 |
 | Tests | Vitest + Testing Library / Playwright | 2.1.5 / 1.48.2 |
 | Lint/Format | ESLint / Prettier | 8.57.1 / 3.3.3 |
 | Runtime / PM | Node.js ≥ 20 / pnpm | — / 9.12.0 |
 
-## 4. Cấu trúc thư mục
+## 4. Directory structure
 
 ```
 pharma-portal/
@@ -67,16 +67,16 @@ pharma-portal/
 │   ├── (auth)/                   # Login, register, forgot password
 │   ├── (dashboard)/              # Authenticated routes
 │   │   ├── layout.tsx            # Sidebar + topbar
-│   │   ├── pos/                  # POS — bán hàng
-│   │   ├── inventory/            # Tồn kho, FEFO
-│   │   ├── customers/            # Khách hàng & bệnh nhân
-│   │   ├── prescriptions/        # OCR đơn thuốc
-│   │   ├── patient-care/         # Dashboard bệnh mãn tính
+│   │   ├── pos/                  # POS — sales
+│   │   ├── inventory/            # Inventory, FEFO
+│   │   ├── customers/            # Customers & patients
+│   │   ├── prescriptions/        # Prescription OCR
+│   │   ├── patient-care/         # Chronic-care dashboard
 │   │   ├── analytics/            # KPI dashboard
-│   │   └── compliance/           # Báo cáo BYT
-│   └── api/                      # Route handlers (proxy đến API Gateway)
+│   │   └── compliance/           # MoH reporting
+│   └── api/                      # Route handlers (proxy to the API Gateway)
 ├── components/
-│   ├── ui/                       # shadcn primitives
+│   ├── ui/                       # UI primitives
 │   ├── pos/                      # CartLine, BarcodeInput, PaymentDialog
 │   ├── inventory/                # StockTable, ExpiryAlert
 │   ├── patient/                  # PatientCard, MedicationTimeline
@@ -89,12 +89,12 @@ pharma-portal/
 └── styles/                       # Global tailwind
 ```
 
-## 5. Khởi chạy
+## 5. Getting started
 
-### Yêu cầu
+### Requirements
 - Node.js 20+
-- pnpm 9+ (khuyến nghị) hoặc npm 10+
-- pharma-api-gateway chạy tại `http://localhost:8080`
+- pnpm 9+ (recommended) or npm 10+
+- pharma-api-gateway running at `http://localhost:8080`
 
 ### Setup
 ```bash
@@ -103,23 +103,23 @@ pnpm install
 pnpm dev                 # http://localhost:3000
 ```
 
-### Biến môi trường (.env.local)
+### Environment variables (.env.local)
 
-| Biến | Mục đích |
-|------|----------|
-| `NODE_ENV` | Môi trường |
-| `NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_APP_URL` | Tên & URL app |
-| `API_GATEWAY_URL` | URL pharma-api-gateway (vd http://localhost:8080) |
-| `API_GATEWAY_TIMEOUT_MS` | Timeout gọi gateway (vd 15000) |
-| `NEXTAUTH_URL` / `NEXTAUTH_SECRET` | Cấu hình NextAuth (secret random mạnh) |
-| `NEXT_PUBLIC_SENTRY_DSN` | (tùy chọn) error tracking |
-| `NEXT_PUBLIC_FEATURE_RX_OCR` | Feature flag bật OCR đơn thuốc |
-| `NEXT_PUBLIC_FEATURE_PHARMAGPT_CHAT` | Feature flag bật chatbox PharmaGPT |
+| Variable | Purpose |
+|----------|---------|
+| `NODE_ENV` | Environment |
+| `NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_APP_URL` | App name & URL |
+| `API_GATEWAY_URL` | pharma-api-gateway URL (e.g. http://localhost:8080) |
+| `API_GATEWAY_TIMEOUT_MS` | Gateway call timeout (e.g. 15000) |
+| `NEXTAUTH_URL` / `NEXTAUTH_SECRET` | NextAuth config (use a strong random secret) |
+| `NEXT_PUBLIC_SENTRY_DSN` | (optional) error tracking |
+| `NEXT_PUBLIC_FEATURE_RX_OCR` | Feature flag to enable prescription OCR |
+| `NEXT_PUBLIC_FEATURE_PHARMAGPT_CHAT` | Feature flag to enable the PharmaGPT chatbox |
 
 ### Build & test
 ```bash
 pnpm build               # production build
-pnpm start               # chạy bản build
+pnpm start               # run the build
 pnpm test                # vitest
 pnpm test:e2e            # playwright
 pnpm lint                # ESLint
@@ -128,18 +128,18 @@ pnpm format              # Prettier
 ```
 
 ### i18n & middleware
-- Ngôn ngữ: **vi** (mặc định) + **en**, file dịch tại `messages/{vi,en}.json` (nhóm: common, nav, hero, stats, engines, impact); cấu hình tại `lib/i18n.ts`.
-- `middleware.ts` dùng NextAuth `withAuth()` bảo vệ các route dashboard (`/pos`, `/inventory`, `/customers`, `/prescriptions`, `/patient-care`, `/analytics`, `/compliance`, `/engines/*`) — chưa đăng nhập sẽ redirect về `/login`.
+- Languages: **vi** (default) + **en**, translation files at `messages/{vi,en}.json` (groups: common, nav, hero, stats, engines, impact); configured in `lib/i18n.ts`.
+- `middleware.ts` uses NextAuth `withAuth()` to protect dashboard routes (`/pos`, `/inventory`, `/customers`, `/prescriptions`, `/patient-care`, `/analytics`, `/compliance`, `/engines/*`) — unauthenticated users are redirected to `/login`.
 
-> Ghi chú: các thư mục component theo tính năng (`components/{inventory,patient,pos,prescriptions}`) hiện là placeholder, sẽ bổ sung theo roadmap.
+> Note: the feature-specific component folders (`components/{inventory,patient,pos,prescriptions}`) are currently placeholders and will be filled in per the roadmap.
 
-## 6. Kết nối các engine AI
+## 6. Connecting to the AI engines
 
-Portal **không gọi trực tiếp** vào AI services — tất cả qua `pharma-api-gateway` để có:
-- Auth/RBAC tập trung.
+The Portal **never calls** the AI services directly — everything goes through `pharma-api-gateway` to get:
+- Centralized auth/RBAC.
 - Rate limiting + audit log.
-- Failover khi 1 engine down.
-- Đường truyền nội bộ data center, mã hóa TLS mTLS.
+- Failover when an engine is down.
+- Data-center internal networking with mTLS/TLS encryption.
 
 ```ts
 // lib/api/clinical.ts
@@ -148,23 +148,23 @@ export async function checkInteractions(payload: CheckInteractionsPayload) {
 }
 ```
 
-## 7. UX cho thiết bị cấu hình thấp
+## 7. UX for low-spec devices
 
-- **Lazy load** hầu hết route theo dynamic import.
-- **Skeleton + optimistic UI** cho POS để duy trì cảm giác mượt khi mạng chậm.
-- **Service Worker (PWA)** — bán offline khi mất mạng, sync khi có lại.
-- **Bundle size budget**: < 200KB JS gzip cho route POS chính.
+- **Lazy load** most routes via dynamic import.
+- **Skeleton + optimistic UI** for POS to keep it feeling smooth on slow networks.
+- **Service Worker (PWA)** — partial offline selling, syncing when back online.
+- **Bundle size budget**: < 200KB gzipped JS for the main POS route.
 
-## 8. Bảo mật
+## 8. Security
 
-- Mọi request có CSRF token + JWT trong HttpOnly cookie.
-- Nội dung clinical (response từ PharmaGPT-VN) hiển thị có disclaimer.
-- Audit log mọi hành động touch dữ liệu bệnh nhân (Nghị định 13/2023).
-- Không log PII vào browser console kể cả ở dev mode.
+- Every request carries a CSRF token + JWT in an HttpOnly cookie.
+- Clinical content (PharmaGPT-VN responses) is shown with a disclaimer.
+- Audit log for every action that touches patient data (Decree 13/2023).
+- No PII logged to the browser console, even in dev mode.
 
 ## 9. Roadmap
 
-- **v0.1**: POS + Inventory + tích hợp VietDrug AI.
+- **v0.1**: POS + Inventory + VietDrug AI integration.
 - **v0.2**: PrescriptionVision OCR + Patient Care Dashboard.
 - **v0.3**: PharmaGPT-VN chatbox + DemandForecast reorder.
 - **v1.0**: PWA offline mode + multi-pharmacy chain support.
