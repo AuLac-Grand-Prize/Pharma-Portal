@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand: 37 99 235;
+  --accent: 6 182 212;
+  --ink: 26 26 26;
+  --line: 226 232 240;
+  --surface: 248 250 252;
+  --bg: 255 255 255;
+}
+
+html.dark {
+  --ink: 241 245 249;
+  --line: 51 65 85;
+  --surface: 15 23 42;
+  --bg: 17 24 39;
+}
+
+html,
+body {
+  height: 100%;
+  background: rgb(var(--bg));
+  color: rgb(var(--ink));
+}
+
+@layer base {
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-white dark:ring-offset-slate-900;
+  }
+  ::selection {
+    background: rgba(37, 99, 235, 0.25);
+  }
+
+  html.dark body {
+    background: #0f172a;
+  }
+  html.dark .bg-white {
+    background-color: #111827;
+  }
+  html.dark .bg-surface,
+  html.dark .bg-slate-50 {
+    background-color: #0f172a;
+  }
+  html.dark .border-line {
+    border-color: #334155;
+  }
+  html.dark .text-ink {
+    color: #f1f5f9;
+  }
+  html.dark .text-ink-muted {
+    color: #cbd5e1;
+  }
+  html.dark .text-ink-subtle {
+    color: #94a3b8;
+  }
+  html.dark .shadow-card,
+  html.dark .shadow-soft {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-[1200px] px-6;
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-white shadow-soft;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill bg-brand px-6 py-3 text-sm font-medium text-white shadow-soft hover:bg-brand-dark disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill border border-brand bg-white px-6 py-3 text-sm font-medium text-brand hover:bg-brand-50;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-pill border border-line bg-white px-3 py-1 text-xs font-medium text-ink-muted;
+  }
+  .skip-link {
+    @apply fixed left-4 top-4 z-50 -translate-y-20 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white shadow-card transition-transform focus:translate-y-0;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #receipt-print-region,
+  #receipt-print-region * {
+    visibility: visible;
+  }
+  #receipt-print-region {
+    position: fixed;
+    inset: 0;
+    width: 80mm;
+    margin: 0 auto;
+    padding: 8mm 6mm;
+    background: white;
+    color: black;
+  }
+}

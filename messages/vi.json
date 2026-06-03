@@ -1,0 +1,38 @@
+{
+  "common": {
+    "appName": "PharmLink AI",
+    "tagline": "Trí tuệ Việt Nam vì sức khỏe người Việt Nam và Đông Nam Á.",
+    "signIn": "Đăng nhập",
+    "signOut": "Đăng xuất",
+    "tryDemo": "Dùng thử",
+    "openPortal": "Vào portal",
+    "watchDemo": "Xem demo",
+    "exploreNow": "Khám phá ngay"
+  },
+  "nav": {
+    "engines": "AI Engines",
+    "impact": "Tác động",
+    "forYou": "Dành cho ai"
+  },
+  "hero": {
+    "badge": "Make in Vietnam · Vietnamese AI for Vietnamese Health",
+    "headlineLead": "Trí tuệ nhân tạo dược phẩm",
+    "headlineEmphasis": "cho 100 triệu người Việt",
+    "subheadline": "Nền tảng AI dược phẩm đầu tiên Make-in-Vietnam, phục vụ 60,000+ nhà thuốc với công nghệ chính xác — giá cả phù hợp với thị trường Việt Nam."
+  },
+  "stats": {
+    "pharmacies": "Nhà thuốc tại Việt Nam",
+    "citizens": "Người dân Việt Nam",
+    "drugs": "Hoạt chất AI hiểu được",
+    "accuracy": "Độ chính xác OCR"
+  },
+  "engines": {
+    "title": "Bốn AI Engine cốt lõi",
+    "subtitle": "Công nghệ thuần Việt — model đào tạo trên dữ liệu y dược Việt Nam.",
+    "learnMore": "Tìm hiểu engine"
+  },
+  "impact": {
+    "title": "Tác động thực tế",
+    "subtitle": "Mỗi engine đem lại giá trị đo lường được cho ngành dược Việt Nam."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "common": {
+    "appName": "PharmLink AI",
+    "tagline": "Vietnamese intelligence for the health of Vietnam and Southeast Asia.",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "tryDemo": "Try it",
+    "openPortal": "Open portal",
+    "watchDemo": "Watch demo",
+    "exploreNow": "Explore now"
+  },
+  "nav": {
+    "engines": "AI Engines",
+    "impact": "Impact",
+    "forYou": "For you"
+  },
+  "hero": {
+    "badge": "Make in Vietnam · Vietnamese AI for Vietnamese Health",
+    "headlineLead": "Pharma-grade AI",
+    "headlineEmphasis": "for 100 million Vietnamese",
+    "subheadline": "The first Made-in-Vietnam pharmaceutical AI platform, serving 60,000+ pharmacies with accurate technology — priced for the Vietnamese market."
+  },
+  "stats": {
+    "pharmacies": "Pharmacies in Vietnam",
+    "citizens": "Vietnamese citizens",
+    "drugs": "Drugs understood by AI",
+    "accuracy": "OCR accuracy"
+  },
+  "engines": {
+    "title": "Four Core AI Engines",
+    "subtitle": "Pure Vietnamese tech — models trained on Vietnamese pharma data.",
+    "learnMore": "Learn about engine"
+  },
+  "impact": {
+    "title": "Real-world impact",
+    "subtitle": "Each engine delivers measurable value for Vietnam's pharmaceutical industry."
+  }
+}
