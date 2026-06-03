@@ -168,3 +168,20 @@ export async function checkInteractions(payload: CheckInteractionsPayload) {
 - **v0.2**: PrescriptionVision OCR + Patient Care Dashboard.
 - **v0.3**: PharmaGPT-VN chatbox + DemandForecast reorder.
 - **v1.0**: PWA offline mode + multi-pharmacy chain support.
+
+---
+
+## About PharmLink AI
+
+This repository is the **platform layer** of [**PharmLink AI**](https://github.com/AuLac-Grand-Prize) — Vietnam's *Made-in-Vietnam* pharmaceutical AI platform serving 60,000+ pharmacies and up to 100 million citizens, in service of medication safety and national health-data sovereignty.
+
+**The platform:**
+- 🖥️ **Pharma Portal** — the pharmacist workspace *(this repo)*
+- 💊 [VietDrug AI](https://github.com/AuLac-Grand-Prize/Pharma-VietDrugAI) — drug-interaction checks
+- 📝 [PrescriptionVision](https://github.com/AuLac-Grand-Prize/Pharma-PrescriptionVision) — handwritten-prescription OCR
+- 🤖 [PharmaGPT-VN](https://github.com/AuLac-Grand-Prize/PharmaGPT-VN) — Vietnamese pharma assistant
+- 📈 [DemandForecast AI](https://github.com/AuLac-Grand-Prize/Pharma-DemandForecast) — demand forecasting
+
+The Portal is the operations layer that surfaces all four AI engines to pharmacists, patients (Zalo Mini App), and ecosystem partners (API) — always through the API Gateway for centralized auth, RBAC, and audit.
+
+> **Disclaimer:** PharmLink AI augments pharmacists — it does not replace them. Every clinical decision rests with a licensed pharmacist; clinical content is shown with a disclaimer and validated by the Vietnamese Clinical Pharmacist Scientific Council.
