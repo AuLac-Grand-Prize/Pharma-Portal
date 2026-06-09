@@ -1,0 +1,12 @@
+# Standalone dev stack for the pharmacist Portal.
+# Points at a Gateway on the host by default; override API_GATEWAY_URL to retarget.
+services:
+  portal:
+    build: .
+    ports: ["3000:3000"]
+    environment:
+      NODE_ENV: production
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-dev-only-insecure-secret}
+      API_GATEWAY_URL: ${API_GATEWAY_URL:-http://host.docker.internal:8080}
+      NEXT_PUBLIC_API_GATEWAY_URL: ${NEXT_PUBLIC_API_GATEWAY_URL:-http://localhost:8080}

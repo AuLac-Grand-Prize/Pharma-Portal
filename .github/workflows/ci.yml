@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: typecheck · test · build
+    runs-on: ubuntu-latest
+    env:
+      # Build-time placeholders; real secrets are injected at deploy time.
+      NEXTAUTH_SECRET: ci-dummy-secret-not-used-in-prod
+      NEXTAUTH_URL: http://localhost:3000
+      API_GATEWAY_URL: http://localhost:8080
+      NEXT_PUBLIC_API_GATEWAY_URL: http://localhost:8080
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Unit & component tests
+        run: npx vitest run
+      - name: Build
+        run: npm run build
