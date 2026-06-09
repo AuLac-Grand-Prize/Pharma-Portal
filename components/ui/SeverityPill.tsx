@@ -9,12 +9,17 @@ const map: Record<InteractionAlert["severity"], { label: string; cls: string }> 
 };
 
 interface SeverityPillProps {
-  severity: InteractionAlert["severity"];
+  // Accept any string: the real Gateway/VietDrugAI contract emits severities
+  // beyond the local union (e.g. "none"), so the component must not assume the
+  // value is a known key.
+  severity: InteractionAlert["severity"] | string;
   className?: string;
 }
 
 export function SeverityPill({ severity, className }: SeverityPillProps) {
-  const item = map[severity];
+  // Guard against unknown/extra severities ("none", future values): an unmapped
+  // key would otherwise crash on `.cls`. Fall back to the neutral "low" style.
+  const item = map[severity as InteractionAlert["severity"]] ?? map.low;
   return (
     <span
       className={cn(
