@@ -6,17 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { AlertCircle, Brain, Building2, KeyRound, Loader2, Mail } from "lucide-react";
 import { Button, Input } from "@/components/ui";
-
-const loginSchema = z.object({
-  pharmacyCode: z.string().trim().min(1, "Nhập mã nhà thuốc"),
-  email: z.string().trim().email("Email không hợp lệ"),
-  password: z.string().min(6, "Mật khẩu tối thiểu 6 ký tự"),
-});
-
-type LoginValues = z.infer<typeof loginSchema>;
+import { loginSchema, type LoginValues } from "@/lib/validation/login";
 
 export default function LoginPage() {
   return (

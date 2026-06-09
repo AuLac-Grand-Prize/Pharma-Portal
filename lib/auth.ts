@@ -1,12 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { z } from "zod";
-
-const credentialsSchema = z.object({
-  pharmacyCode: z.string().trim().min(1, "Mã nhà thuốc là bắt buộc"),
-  email: z.string().trim().email("Email không hợp lệ"),
-  password: z.string().min(6, "Mật khẩu tối thiểu 6 ký tự"),
-});
+import { loginSchema as credentialsSchema } from "@/lib/validation/login";
 
 interface DemoAccount {
   pharmacyCode: string;

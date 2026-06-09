@@ -13,9 +13,14 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { Button, Card, CardHeader, Input, SeverityPill } from "@/components/ui";
 import type { InteractionAlert } from "@/types/domain";
 import { cn } from "@/lib/utils";
+import { checkVietDrugInteractions, isApiError } from "@/lib/api";
+
+/** When on, `analyze()` calls the real Gateway via the typed api layer. */
+const VIETDRUG_LIVE = process.env.NEXT_PUBLIC_FEATURE_VIETDRUG_LIVE === "true";
 
 interface SelectedDrug {
   id: string;
@@ -52,10 +57,12 @@ const MOCK_ALERTS: InteractionAlert[] = [
 ];
 
 export default function VietDrugAIPage() {
+  const { data: session } = useSession();
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<SelectedDrug[]>([SUGGESTED_DRUGS[0], SUGGESTED_DRUGS[1]]);
+  const [selected, setSelected] = useState<SelectedDrug[]>(() => SUGGESTED_DRUGS.slice(0, 2));
   const [analyzing, setAnalyzing] = useState(false);
   const [alerts, setAlerts] = useState<InteractionAlert[]>(MOCK_ALERTS);
+  const [error, setError] = useState<string | null>(null);
 
   function add(d: SelectedDrug) {
     setSelected((prev) => (prev.find((x) => x.id === d.id) ? prev : [...prev, d]));
@@ -66,9 +73,42 @@ export default function VietDrugAIPage() {
   }
   async function analyze() {
     setAnalyzing(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setAlerts(selected.length >= 2 ? MOCK_ALERTS : []);
-    setAnalyzing(false);
+    setError(null);
+
+    // Feature-flag off → preserve the original mock path (no network call).
+    if (!VIETDRUG_LIVE) {
+      await new Promise((r) => setTimeout(r, 800));
+      setAlerts(selected.length >= 2 ? MOCK_ALERTS : []);
+      setAnalyzing(false);
+      return;
+    }
+
+    // Live path: call the real Gateway through the typed api layer, forwarding
+    // the NextAuth session access token.
+    try {
+      const result = await checkVietDrugInteractions(
+        {
+          drugs: selected.map((d) => d.inn),
+          patient: {
+            age: 62,
+            sex: "Nữ",
+            egfr: 48,
+            conditions: ["Tăng huyết áp", "Đái tháo đường type 2", "Suy thận giai đoạn 3"],
+          },
+        },
+        () => session?.accessToken,
+      );
+      setAlerts(result);
+    } catch (err) {
+      setAlerts([]);
+      setError(
+        isApiError(err)
+          ? `Không thể phân tích tương tác (lỗi ${err.status}).`
+          : "Không thể phân tích tương tác.",
+      );
+    } finally {
+      setAnalyzing(false);
+    }
   }
 
   const filtered = SUGGESTED_DRUGS.filter(
@@ -186,7 +226,18 @@ export default function VietDrugAIPage() {
         <div className="space-y-4">
           <h2 className="text-base font-semibold text-ink">Kết quả phân tích</h2>
 
-          {alerts.length === 0 && (
+          {error && (
+            <Card className="border-red-200 bg-red-50/40">
+              <div className="flex items-center gap-3 text-sm">
+                <AlertTriangle className="h-5 w-5 text-red-500" />
+                <div className="font-medium text-red-700" role="alert">
+                  {error}
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {alerts.length === 0 && !error && (
             <Card>
               <div className="flex items-center gap-3 text-sm">
                 <ShieldCheck className="h-5 w-5 text-emerald-500" />

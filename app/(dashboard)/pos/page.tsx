@@ -123,10 +123,14 @@ export default function POSPage() {
 
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
-  const [cart, setCart] = useState<CartLine[]>([
-    { drug: CATALOG[0], qty: 2, unitPriceVnd: CATALOG[0].unitPriceVnd },
-    { drug: CATALOG[1], qty: 1, unitPriceVnd: CATALOG[1].unitPriceVnd },
-  ]);
+  const [cart, setCart] = useState<CartLine[]>(() => {
+    const seed = CATALOG.slice(0, 2);
+    return seed.map((drug, i) => ({
+      drug,
+      qty: i === 0 ? 2 : 1,
+      unitPriceVnd: drug.unitPriceVnd,
+    }));
+  });
   const [customer, setCustomer] = useState<Patient | null>(null);
 
   const [barcodeOpen, setBarcodeOpen] = useState(false);
