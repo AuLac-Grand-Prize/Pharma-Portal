@@ -20,6 +20,8 @@ export type InteractionAlert = {
   severity: "low" | "moderate" | "high" | "contraindicated";
   mechanism: string;
   clinicalAdvice: string;
+  /** Optional citation from VietDrugAI (snake_case `reference` upstream). */
+  reference?: string;
 };
 
 export type Patient = {

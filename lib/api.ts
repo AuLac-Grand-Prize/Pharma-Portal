@@ -95,35 +95,93 @@ export function createApi(
   return instance;
 }
 
+/**
+ * REAL Gateway request body for `POST /v1/clinical/check-interactions` — a
+ * verbatim passthrough to VietDrugAI. snake_case, matching the VietDrugAI DTO.
+ *
+ * Screening is "one new drug against the current list": `new_medication` is the
+ * INN being added; `current_medications` are the INNs already on board.
+ */
 export interface VietDrugInteractionPayload {
-  /** INN / active-ingredient names of the drugs to screen for interactions. */
-  drugs: string[];
-  patient?: {
-    age?: number;
-    sex?: string;
+  patient_id: string;
+  current_medications: string[];
+  new_medication: string;
+  patient_context: {
+    age: number;
+    weight_kg?: number;
     egfr?: number;
-    conditions?: string[];
+    conditions: string[];
   };
 }
 
+/** REAL VietDrugAI risk band (snake_case enum value). */
+export type RiskLevel = "none" | "low" | "moderate" | "high";
+
+/**
+ * REAL VietDrugAI response shape (snake_case). The Gateway forwards this body
+ * unchanged, so the api layer is the single place that translates it into the
+ * camelCase domain {@link InteractionAlert} the UI renders.
+ */
+interface RawInteraction {
+  drug_a: string;
+  drug_b: string;
+  severity: string;
+  mechanism: string;
+  clinical_advice: string;
+  reference?: string;
+}
+
 interface CheckInteractionsResponse {
+  risk_level: RiskLevel;
+  interactions: RawInteraction[];
+  personalized_score?: number;
+  human_review_required?: boolean;
+  latency_ms?: number;
+}
+
+/** Mapped result the UI consumes: camelCase alerts plus the overall risk band. */
+export interface InteractionCheckResult {
+  riskLevel: RiskLevel;
   interactions: InteractionAlert[];
-  riskLevel?: string;
+}
+
+/** Translate one snake_case VietDrugAI interaction into the camelCase domain type. */
+function mapInteraction(raw: RawInteraction): InteractionAlert {
+  return {
+    drugA: raw.drug_a,
+    drugB: raw.drug_b,
+    severity: raw.severity as InteractionAlert["severity"],
+    mechanism: raw.mechanism,
+    clinicalAdvice: raw.clinical_advice,
+    ...(raw.reference !== undefined ? { reference: raw.reference } : {}),
+  };
+}
+
+/** Map the full snake_case response into the camelCase {@link InteractionCheckResult}. */
+export function mapInteractionResponse(
+  data: CheckInteractionsResponse,
+): InteractionCheckResult {
+  return {
+    riskLevel: data.risk_level,
+    interactions: (data.interactions ?? []).map(mapInteraction),
+  };
 }
 
 /**
- * Screen a drug list for interactions via the Gateway VietDrug endpoint and
- * return the typed alert list. Rejects with an {@link ApiError} on failure.
+ * Screen a new drug against the patient's current medications via the Gateway
+ * VietDrug endpoint. Sends the REAL snake_case request DTO and maps the REAL
+ * snake_case response into the camelCase {@link InteractionCheckResult} the UI
+ * consumes. Rejects with an {@link ApiError} on failure.
  */
 export async function checkVietDrugInteractions(
   payload: VietDrugInteractionPayload,
   getToken?: TokenGetter,
   baseURL?: string,
-): Promise<InteractionAlert[]> {
+): Promise<InteractionCheckResult> {
   const api = createApi(getToken, baseURL);
   const res = await api.post<CheckInteractionsResponse>(
     "/clinical/check-interactions",
     payload,
   );
-  return res.data.interactions;
+  return mapInteractionResponse(res.data);
 }

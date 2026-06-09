@@ -85,20 +85,36 @@ export default function VietDrugAIPage() {
 
     // Live path: call the real Gateway through the typed api layer, forwarding
     // the NextAuth session access token.
+    //
+    // NOTE (out of scope — left as a known gap): this live path is not yet wired
+    // to a working auth phase. Demo-account sessions carry no `accessToken`, and
+    // Portal roles (pharmacist/owner) differ from the Gateway/VietDrugAI roles
+    // (DS_TRUONG…), so the Gateway will reject these calls until the real auth
+    // phase lands. The feature stays behind NEXT_PUBLIC_FEATURE_VIETDRUG_LIVE
+    // (default off) precisely so this gap can't reach end users.
     try {
+      // Build the REAL VietDrugAI request DTO (snake_case): screen the last
+      // selected drug against the rest. INNs are the active-ingredient names.
+      // The button is disabled below 2 selections, so `newMedication` is always
+      // present; `?? ""` only satisfies the index-access type narrowing.
+      const inns = selected.map((d) => d.inn);
+      const newMedication = inns[inns.length - 1] ?? "";
+      const currentMedications = inns.slice(0, -1);
+
       const result = await checkVietDrugInteractions(
         {
-          drugs: selected.map((d) => d.inn),
-          patient: {
+          patient_id: "demo-patient",
+          current_medications: currentMedications,
+          new_medication: newMedication,
+          patient_context: {
             age: 62,
-            sex: "Nữ",
             egfr: 48,
             conditions: ["Tăng huyết áp", "Đái tháo đường type 2", "Suy thận giai đoạn 3"],
           },
         },
         () => session?.accessToken,
       );
-      setAlerts(result);
+      setAlerts(result.interactions);
     } catch (err) {
       setAlerts([]);
       setError(

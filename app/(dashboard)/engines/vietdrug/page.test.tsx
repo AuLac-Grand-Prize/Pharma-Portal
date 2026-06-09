@@ -2,8 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { server } from "@/test/msw/server";
-import { GATEWAY_URL } from "@/test/msw/handlers";
-import type { InteractionAlert } from "@/types/domain";
+import { GATEWAY_URL, isRealInteractionRequest } from "@/test/msw/handlers";
 
 const ENDPOINT = `${GATEWAY_URL}/clinical/check-interactions`;
 
@@ -30,18 +29,30 @@ afterEach(() => {
 
 describe("VietDrug engine page", () => {
   it("renders Gateway-returned alerts (sentinel) when the live flag is ON", async () => {
-    const SENTINEL: InteractionAlert = {
-      drugA: "SENTINEL",
-      drugB: "GatewayDrug",
-      severity: "contraindicated",
-      mechanism: "Returned by the mocked Gateway",
-      clinicalAdvice: "Proves the live path executed.",
+    // REAL snake_case response: the api layer maps it to the camelCase alert the
+    // UI renders, so the SENTINEL only appears if the mapping ran on real data.
+    const SENTINEL_RESPONSE = {
+      risk_level: "high",
+      interactions: [
+        {
+          drug_a: "SENTINEL",
+          drug_b: "GatewayDrug",
+          severity: "high",
+          mechanism: "Returned by the mocked Gateway",
+          clinical_advice: "Proves the live path executed.",
+        },
+      ],
+      personalized_score: 0.9,
+      human_review_required: true,
+      latency_ms: 120,
     };
     let seenAuth: string | null = null;
+    let seenBody: unknown;
     server.use(
-      http.post(ENDPOINT, ({ request }) => {
+      http.post(ENDPOINT, async ({ request }) => {
         seenAuth = request.headers.get("authorization");
-        return HttpResponse.json({ interactions: [SENTINEL], riskLevel: "high" });
+        seenBody = await request.json();
+        return HttpResponse.json(SENTINEL_RESPONSE);
       }),
     );
 
@@ -53,6 +64,13 @@ describe("VietDrug engine page", () => {
 
     expect(await screen.findByText(/SENTINEL/)).toBeInTheDocument();
     expect(seenAuth).toBe("Bearer vietdrug-token");
+    // The page must send the REAL snake_case request DTO, not the old shape.
+    expect(isRealInteractionRequest(seenBody)).toBe(true);
+    expect(seenBody).toMatchObject({
+      new_medication: expect.any(String),
+      current_medications: expect.any(Array),
+      patient_context: { age: expect.any(Number) },
+    });
   });
 
   it("uses MOCK_ALERTS and makes no outbound request when the live flag is OFF", async () => {
